@@ -35,7 +35,7 @@ jobs:
           sleep 3
 
       - name: Run tests
-        run:  python -m pytest --alluredir=./allure-results
+        run: pytest --alluredir=./allure-results
 
       - name: Get Allure history
         if: always()
