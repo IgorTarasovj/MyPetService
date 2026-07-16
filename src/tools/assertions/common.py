@@ -42,6 +42,12 @@ def assert_model(actual: BaseModel, expected: BaseModel):
         assert_equal(actual_value, value, attribute_name)
 
 def validate_response(response: dict, model: BaseModel):
+    """
+    Валидирует dict-объект согласно переданной pydantic-моделе
+    :param response: dict-объект
+    :param model: pydantic-модель
+    :raises: ValidationError: если не проходит валидацию
+    """
     try:
         model.model_validate(response)
     except ValidationError as err:
