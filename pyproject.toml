@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "MyPetService"
+version = "0.1.0"
+description = "Pet project for learning test automation"
+requires-python = ">=3.12"
+
+dependencies = [
+    "fastapi==0.139.2",
+    "httpx==0.28.1",
+    "pydantic==2.13.4",
+    "requests==2.33.1",
+    "uvicorn==0.51.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest==9.0.2",
+    "allure-pytest==2.13.5",
+]
+
+[tool.setuptools]
+packages = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = [
+    "."
+]
+
+testpaths = [
+    "tests"
+]
+
+addopts = [
+    "-v"
+]

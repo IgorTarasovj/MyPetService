@@ -2,10 +2,12 @@ name: Tests
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -13,14 +15,17 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: github-pages
   cancel-in-progress: true
 
 jobs:
+
   tests:
+
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -29,20 +34,33 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Install Allure CLI
+        run: |
+          wget https://github.com/allure-framework/allure2/releases/download/2.34.1/allure-2.34.1.tgz
+          tar -xzf allure-2.34.1.tgz
+          sudo mv allure-2.34.1 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
+
       - name: Start FastAPI
         run: |
-          uvicorn app.main:app --host 127.0.0.1 --port 8000 &
-          sleep 3
+          uvicorn main:app --host 127.0.0.1 --port 8000 &
+          sleep 2
 
       - name: Wait for server
         run: |
           for i in {1..30}; do
-            curl --fail http://127.0.0.1:8000/status && exit 0
+            curl --silent --fail http://127.0.0.1:8000/status && exit 0
             sleep 1
           done
 
@@ -53,22 +71,24 @@ jobs:
         run: |
           pytest -v --alluredir=allure-results
 
-      - name: Generate Allure report
-        uses: simple-elf/allure-report-action@v1.9
+      - name: Generate Allure Report
         if: always()
-        with:
-          allure_results: allure-results
-          allure_report: allure-report
+        run: |
+          allure generate allure-results \
+            --clean \
+            -o allure-report
 
-      - name: Upload GitHub Pages artifact
+      - name: Upload GitHub Pages Artifact
         if: always()
         uses: actions/upload-pages-artifact@v3
         with:
           path: allure-report
 
   deploy:
-    if: always()
+
     needs: tests
+
+    if: always()
 
     runs-on: ubuntu-latest
 
@@ -77,5 +97,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - id: deployment
+
+      - name: Deploy
+        id: deployment
         uses: actions/deploy-pages@v4
