@@ -2,7 +2,7 @@ import allure
 from http import HTTPStatus
 from src.clients.http_builder import get_http_client
 from src.tools.assertions.common import assert_status_code, validate_response
-from src.models.technical.technical import GetResponseStatusSchema
+from src.schemas.technical.technical import GetResponseStatusSchema
 
 
 @allure.title("Get service status")
