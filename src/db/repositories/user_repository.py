@@ -9,6 +9,10 @@ class UserRepository:
         self.db_client  = db_client
 
     def get_default_user_id(self):
+        """
+        Метод, делающий запрос в базу данных на получение id дефолтного пользователя
+        :return: id дефолтного пользователя
+        """
         query = text("""
                   SELECT id
                   FROM users
