@@ -1,6 +1,6 @@
 import uuid
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict, EmailStr
 
 
 class UserRequestSchema(BaseModel):
@@ -8,11 +8,12 @@ class UserRequestSchema(BaseModel):
     Описание структуры запроса на создание пользователя
     """
     username: str
-    id: str
+    email: EmailStr
 
 class UserResponseSchema(BaseModel):
     """
     Описание структуры овтета на создание пользователя
     """
+    id: uuid.UUID
     username: str
     email: str
