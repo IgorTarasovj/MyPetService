@@ -1,6 +1,6 @@
 import uuid
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 
 
 class User(BaseModel):
@@ -9,7 +9,7 @@ class User(BaseModel):
     """
     id: uuid.UUID
     username: str
-    email: str
+    email: EmailStr
 
 class UserDBSchema(BaseModel):
     """
@@ -17,12 +17,12 @@ class UserDBSchema(BaseModel):
     """
     id: uuid.UUID
     username: str
-    email: str
+    email: EmailStr
 
 class GerUserResponseSchema(BaseModel):
     """
     Описание структуры ответа на GET запрос /user
     """
     username: str
-    email: str
+    email: EmailStr
 
