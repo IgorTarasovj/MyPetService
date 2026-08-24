@@ -1,7 +1,6 @@
 from sqlalchemy import text
 
 from src.db.db_client import DatabaseClient
-from src.schemas.users.user import User
 
 class UserRepository:
 

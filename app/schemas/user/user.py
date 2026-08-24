@@ -16,4 +16,4 @@ class UserResponseSchema(BaseModel):
     """
     id: uuid.UUID
     username: str
-    email: str
+    email: EmailStr
