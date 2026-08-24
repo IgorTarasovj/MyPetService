@@ -23,6 +23,7 @@ dependencies = [
 test = [
     "pytest==9.0.2",
     "allure-pytest==2.13.5",
+    "pydantic==2.13.4"
 ]
 
 [tool.setuptools]
