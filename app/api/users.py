@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from app.db.dependencies import get_db, get_user_repository
 from app.db.models.user import User
 from app.schemas.user.user import UserRequestSchema, UserResponseSchema, UserUpdateRequestSchema, \
-    UserUpdateResponseSchema
+    UserUpdateResponseSchema, UserDeleteResponseSchema, UserDeleteRequestSchema
 from app.db.repositories.user_repository import UserRepository
 
 router = APIRouter(prefix="/users",
@@ -96,6 +96,24 @@ def partial_update_user(request: UserUpdateRequestSchema,
 
     return UserUpdateResponseSchema(
         id=user.id,
+        username=user.username,
+        email=user.email
+    )
+
+@router.delete("/user", response_model=UserDeleteResponseSchema)
+def delete_user(request: UserDeleteRequestSchema,
+                        user_repository: UserRepository = Depends(get_user_repository)) -> UserDeleteResponseSchema:
+
+    user = user_repository.delete_user(
+        user_id=request.id
+    )
+
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
+
+    return UserDeleteResponseSchema(
         username=user.username,
         email=user.email
     )

@@ -33,3 +33,17 @@ class UserUpdateResponseSchema(BaseModel):
     id: uuid.UUID
     username: str
     email: EmailStr
+
+class UserDeleteRequestSchema(BaseModel):
+    """
+    Описание структуры запроса на удаление пользователя
+    """
+    id: uuid.UUID
+
+class UserDeleteResponseSchema(BaseModel):
+    """
+     Описание структуры ответа на обновление пользователя
+    """
+    status: str = Field(default= "OK")
+    username: str
+    email: EmailStr

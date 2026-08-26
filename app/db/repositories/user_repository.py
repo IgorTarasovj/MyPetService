@@ -35,3 +35,18 @@ class UserRepository:
         self.db.commit()
 
         return user
+
+    def delete_user(self, user_id)->User:
+
+        user = self.db.scalar(
+            select(User).where(User.id == user_id)
+        )
+
+        if user is None:
+            return None
+
+        self.db.delete(user)
+
+        self.db.commit()
+
+        return user
