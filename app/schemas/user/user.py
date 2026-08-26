@@ -17,3 +17,19 @@ class UserResponseSchema(BaseModel):
     id: uuid.UUID
     username: str
     email: EmailStr
+
+class UserUpdateRequestSchema(BaseModel):
+    """
+    Описание структуры запроса на обновление пользователя
+    """
+    id: uuid.UUID
+    username: str
+    email: EmailStr
+
+class UserUpdateResponseSchema(BaseModel):
+    """
+    Описание структуры ответа на обновление пользователя
+    """
+    id: uuid.UUID
+    username: str
+    email: EmailStr

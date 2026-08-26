@@ -1,13 +1,14 @@
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.db.dependencies import get_db, get_user_repository
 from app.db.models.user import User
-from app.schemas.user.user import UserRequestSchema, UserResponseSchema
+from app.schemas.user.user import UserRequestSchema, UserResponseSchema, UserUpdateRequestSchema, \
+    UserUpdateResponseSchema
 from app.db.repositories.user_repository import UserRepository
 
 router = APIRouter(prefix="/users",
@@ -26,7 +27,7 @@ def get_user(user_id: uuid.UUID,
     )
 
     if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     return user
 
@@ -42,7 +43,29 @@ def create_user(request: UserRequestSchema,
         return UserResponseSchema(
             id=user.id,
             username=user.username,
-            email=user.email,
+            email=user.email
         )
     except IntegrityError:
         raise HTTPException(status_code=409, detail="User already exists")
+
+@router.put("/user", response_model=UserUpdateResponseSchema)
+def update_user(request: UserUpdateRequestSchema,
+                user_repository: UserRepository = Depends(get_user_repository)) -> UserUpdateResponseSchema:
+
+    user = user_repository.update_user(
+        user_id=request.id,
+        username=request.username,
+        email=request.email,
+    )
+
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
+    return UserUpdateResponseSchema(
+        id=user.id,
+        username=user.username,
+        email=user.email
+    )
