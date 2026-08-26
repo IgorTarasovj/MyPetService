@@ -26,8 +26,11 @@ class UserRepository:
         if user is None:
             return None
 
-        user.username = username
-        user.email = email
+        if username is not None:
+            user.username = username
+
+        if email is not None:
+            user.email = email
 
         self.db.commit()
 

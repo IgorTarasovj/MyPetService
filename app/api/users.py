@@ -69,3 +69,33 @@ def update_user(request: UserUpdateRequestSchema,
         username=user.username,
         email=user.email
     )
+
+@router.patch("/user", response_model=UserUpdateResponseSchema)
+def partial_update_user(request: UserUpdateRequestSchema,
+                        user_repository: UserRepository = Depends(get_user_repository)) -> UserUpdateResponseSchema:
+
+    user = user_repository.update_user(
+        user_id=request.id,
+        username=request.username,
+        email=request.email,
+    )
+
+    if user.username is None and user.email is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="At least one field must be provided",
+        )
+
+
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
+
+    return UserUpdateResponseSchema(
+        id=user.id,
+        username=user.username,
+        email=user.email
+    )

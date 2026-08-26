@@ -23,8 +23,8 @@ class UserUpdateRequestSchema(BaseModel):
     Описание структуры запроса на обновление пользователя
     """
     id: uuid.UUID
-    username: str
-    email: EmailStr
+    username: str | None = None
+    email: EmailStr | None = None
 
 class UserUpdateResponseSchema(BaseModel):
     """
